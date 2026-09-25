@@ -170,3 +170,6 @@ trainer = SFTTrainer(
 )
 
 print("\nSFT trainer created successfully!")
+
+print("\nStarting training...")
+trainer.train()
