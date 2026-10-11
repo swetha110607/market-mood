@@ -169,7 +169,33 @@ trainer = SFTTrainer(
     args=training_args,
 )
 
-print("\nSFT trainer created successfully!")
 
+print("\nSFT trainer created successfully!")
 print("\nStarting training...")
 trainer.train()
+
+# Save the final trained Sage adapter.
+FINAL_MODEL_DIR = PROJECT_ROOT / "sentiment-classifier" / "final-adapter"
+trainer.save_model(str(FINAL_MODEL_DIR))
+tokenizer.save_pretrained(str(FINAL_MODEL_DIR))
+
+print(f"\nFinal Sage adapter saved to: {FINAL_MODEL_DIR}")
+
+# Back up the adapter to Google Drive.
+from google.colab import drive
+
+drive.mount("/content/drive")
+
+DRIVE_BACKUP_DIR = Path(
+    "/content/drive/MyDrive/MarketMood/final-adapter"
+)
+
+DRIVE_BACKUP_DIR.parent.mkdir(parents=True, exist_ok=True)
+
+shutil.copytree(
+    FINAL_MODEL_DIR,
+    DRIVE_BACKUP_DIR,
+    dirs_exist_ok=True,
+)
+
+print(f"\nSage adapter backed up to: {DRIVE_BACKUP_DIR}")
